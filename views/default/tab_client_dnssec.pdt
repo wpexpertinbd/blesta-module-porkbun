@@ -1,0 +1,106 @@
+<div class="pad">
+    <div class="title_row first">
+        <h3><?php $this->_('Porkbun.tab_dnssec.title_list'); ?></h3>
+    </div>
+    <p class="text-muted"><small><?php $this->_('Porkbun.tab_dnssec.info'); ?></small></p>
+
+    <!-- Existing DNSSEC Records -->
+    <table class="table table-curved table-striped">
+        <thead>
+            <tr class="heading_row">
+                <th><?php $this->_('Porkbun.tab_dnssec.keytag'); ?></th>
+                <th><?php $this->_('Porkbun.tab_dnssec.algorithm'); ?></th>
+                <th><?php $this->_('Porkbun.tab_dnssec.digest_type'); ?></th>
+                <th><?php $this->_('Porkbun.tab_dnssec.digest'); ?></th>
+                <th><?php $this->_('Porkbun.tab_dnssec.options'); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($vars->records)) { ?>
+                <?php foreach ($vars->records as $record) { ?>
+                <tr>
+                    <td><?php echo $this->Html->safe($record['keyTag']); ?></td>
+                    <td><?php echo $this->Html->safe($record['alg']); ?></td>
+                    <td><?php echo $this->Html->safe($record['digestType']); ?></td>
+                    <td style="max-width:300px;word-break:break-all;"><code style="font-size:11px;"><?php echo $this->Html->safe($record['digest']); ?></code></td>
+                    <td>
+                        <?php $this->Form->create(); ?>
+                        <?php $this->Form->fieldHidden('delete_keytag', $record['keyTag']); ?>
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this DNSSEC record? This may affect domain resolution.');">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <?php $this->Form->end(); ?>
+                    </td>
+                </tr>
+                <?php } ?>
+            <?php } else { ?>
+                <tr><td colspan="5" class="text-center"><?php $this->_('Porkbun.tab_dnssec.no_records'); ?></td></tr>
+            <?php } ?>
+        </tbody>
+    </table>
+
+    <!-- Add New DNSSEC Record -->
+    <h4><?php $this->_('Porkbun.tab_dnssec.add_record'); ?></h4>
+    <?php $this->Form->create(); ?>
+
+    <div class="row">
+        <div class="col-md-2">
+            <?php $this->Form->label($this->_('Porkbun.tab_dnssec.keytag', true), 'new_keytag'); ?>
+            <?php $this->Form->fieldText('new_keytag', null, ['class' => 'form-control', 'placeholder' => 'e.g. 64087']); ?>
+        </div>
+        <div class="col-md-3">
+            <?php $this->Form->label($this->_('Porkbun.tab_dnssec.algorithm', true), 'new_alg'); ?>
+            <?php $this->Form->fieldSelect('new_alg', $vars->algorithms, null, ['class' => 'form-control']); ?>
+        </div>
+        <div class="col-md-2">
+            <?php $this->Form->label($this->_('Porkbun.tab_dnssec.digest_type', true), 'new_digest_type'); ?>
+            <?php $this->Form->fieldSelect('new_digest_type', $vars->digest_types, null, ['class' => 'form-control']); ?>
+        </div>
+        <div class="col-md-5">
+            <?php $this->Form->label($this->_('Porkbun.tab_dnssec.digest', true), 'new_digest'); ?>
+            <?php $this->Form->fieldText('new_digest', null, ['class' => 'form-control', 'placeholder' => 'Hex digest string']); ?>
+        </div>
+    </div>
+
+    <!-- Advanced Key Data (optional) -->
+    <div class="panel panel-default" style="margin-top:15px;">
+        <div class="panel-heading">
+            <a data-toggle="collapse" href="#dnssecAdvanced" style="text-decoration:none;">
+                <i class="fas fa-chevron-down"></i> <?php $this->_('Porkbun.tab_dnssec.advanced_title'); ?>
+            </a>
+        </div>
+        <div id="dnssecAdvanced" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <?php $this->Form->label($this->_('Porkbun.tab_dnssec.max_sig_life', true), 'new_max_sig_life'); ?>
+                        <?php $this->Form->fieldText('new_max_sig_life', null, ['class' => 'form-control']); ?>
+                    </div>
+                    <div class="col-md-2">
+                        <?php $this->Form->label($this->_('Porkbun.tab_dnssec.key_data_flags', true), 'new_key_data_flags'); ?>
+                        <?php $this->Form->fieldText('new_key_data_flags', null, ['class' => 'form-control']); ?>
+                    </div>
+                    <div class="col-md-2">
+                        <?php $this->Form->label($this->_('Porkbun.tab_dnssec.key_data_protocol', true), 'new_key_data_protocol'); ?>
+                        <?php $this->Form->fieldText('new_key_data_protocol', null, ['class' => 'form-control']); ?>
+                    </div>
+                    <div class="col-md-2">
+                        <?php $this->Form->label($this->_('Porkbun.tab_dnssec.key_data_algo', true), 'new_key_data_algo'); ?>
+                        <?php $this->Form->fieldText('new_key_data_algo', null, ['class' => 'form-control']); ?>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-md-12">
+                        <?php $this->Form->label($this->_('Porkbun.tab_dnssec.key_data_pubkey', true), 'new_key_data_pubkey'); ?>
+                        <?php $this->Form->fieldTextarea('new_key_data_pubkey', null, ['class' => 'form-control', 'rows' => '3']); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="button_row" style="margin-top:10px;">
+        <?php $this->Form->fieldSubmit('save', $this->_('Porkbun.tab_dnssec.field_submit', true), ['class' => 'btn btn-primary']); ?>
+    </div>
+    <?php $this->Form->end(); ?>
+</div>

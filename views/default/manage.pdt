@@ -1,0 +1,55 @@
+<?php
+$this->Widget->clear();
+$this->Widget->setLinkButtons($link_buttons);
+$this->Widget->create($this->_('Porkbun.manage.box_title', true));
+?>
+<div class="title_row first">
+    <h3><?php $this->_('Porkbun.manage.title'); ?></h3>
+</div>
+<?php
+$rows = $module->rows ?? [];
+if (count($rows) > 0) {
+?>
+<table class="table">
+    <tr class="heading_row">
+        <td><span><?php $this->_('Porkbun.manage.module_row_title'); ?></span></td>
+        <td><span><?php $this->_('Porkbun.manage.module_groups_title'); ?></span></td>
+        <td class="last"><span><?php $this->_('Porkbun.manage.module_rows_options'); ?></span></td>
+    </tr>
+    <?php foreach ($rows as $index => $row) { ?>
+    <tr<?php echo ($index % 2 ? ' class="odd_row"' : ''); ?>>
+        <td><?php echo $this->Html->safe($row->meta->user ?? ''); ?></td>
+        <td><?php echo $this->Html->safe(count($row->groups ?? [])); ?></td>
+        <td>
+            <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/modules/editrow/' . ($module->id ?? '') . '/' . ($row->id ?? '') . '/'); ?>">
+                <?php $this->_('Porkbun.manage.module_rows.edit'); ?>
+            </a>
+            &nbsp;|&nbsp;
+            <?php
+            $this->Form->create($this->base_uri . 'settings/company/modules/deleterow/' . ($module->id ?? '') . '/' . ($row->id ?? '') . '/');
+            ?>
+            <input type="hidden" name="id" value="<?php echo $this->Html->safe($module->id); ?>">
+            <input type="hidden" name="row_id" value="<?php echo $this->Html->safe($row->id); ?>">
+            <a href="#" class="manage" rel="<?php echo $this->_('Porkbun.manage.module_rows.confirm_delete', true); ?>">
+                <?php $this->_('Porkbun.manage.module_rows.delete'); ?>
+            </a>
+            <?php $this->Form->end(); ?>
+        </td>
+    </tr>
+    <?php } ?>
+</table>
+<?php } else { ?>
+<div class="empty_section">
+    <div class="empty_box"><?php $this->_('Porkbun.manage.module_rows_no_results'); ?></div>
+</div>
+<?php } ?>
+<?php $this->Widget->end(); ?>
+<script type="text/javascript">
+$(function () {
+    $('a.manage[rel]').blestaModalConfirm({
+        base_url: '<?php echo $this->base_uri; ?>',
+        close: '<?php $this->_('AppController.modal.text_close'); ?>',
+        submit: true
+    });
+});
+</script>

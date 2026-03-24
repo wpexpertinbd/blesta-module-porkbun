@@ -1,0 +1,72 @@
+<div class="pad">
+    <div class="title_row first">
+        <h3><?php $this->_('Porkbun.tab_urlforward.title'); ?></h3>
+    </div>
+
+    <!-- Existing Forwards -->
+    <table class="table table-curved table-striped">
+        <thead>
+            <tr class="heading_row">
+                <th><?php $this->_('Porkbun.tab_urlforward.subdomain'); ?></th>
+                <th><?php $this->_('Porkbun.tab_urlforward.location'); ?></th>
+                <th><?php $this->_('Porkbun.tab_urlforward.type'); ?></th>
+                <th><?php $this->_('Porkbun.tab_urlforward.include_path'); ?></th>
+                <th><?php $this->_('Porkbun.tab_urlforward.wildcard'); ?></th>
+                <th><?php $this->_('Porkbun.tab_urlforward.options'); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($vars->forwards)) { ?>
+                <?php foreach ($vars->forwards as $fwd) { ?>
+                <tr>
+                    <td><?php echo $this->Html->safe($fwd['subdomain'] ?: '(root)'); ?></td>
+                    <td><?php echo $this->Html->safe($fwd['location']); ?></td>
+                    <td><?php echo $this->Html->safe($fwd['type']); ?></td>
+                    <td><?php echo $this->Html->safe($fwd['includePath']); ?></td>
+                    <td><?php echo $this->Html->safe($fwd['wildcard']); ?></td>
+                    <td>
+                        <?php $this->Form->create(); ?>
+                        <?php $this->Form->fieldHidden('delete_id', $fwd['id']); ?>
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this forward?');">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <?php $this->Form->end(); ?>
+                    </td>
+                </tr>
+                <?php } ?>
+            <?php } else { ?>
+                <tr><td colspan="6" class="text-center">No URL forwards found.</td></tr>
+            <?php } ?>
+        </tbody>
+    </table>
+
+    <!-- Add New Forward -->
+    <h4><?php $this->_('Porkbun.tab_urlforward.add_record'); ?></h4>
+    <?php $this->Form->create(); ?>
+    <div class="row">
+        <div class="col-md-2">
+            <?php $this->Form->label($this->_('Porkbun.tab_urlforward.subdomain', true), 'new_subdomain'); ?>
+            <?php $this->Form->fieldText('new_subdomain', null, ['class' => 'form-control', 'placeholder' => 'Leave blank for root']); ?>
+        </div>
+        <div class="col-md-3">
+            <?php $this->Form->label($this->_('Porkbun.tab_urlforward.location', true), 'new_location'); ?>
+            <?php $this->Form->fieldText('new_location', null, ['class' => 'form-control', 'placeholder' => 'https://example.com']); ?>
+        </div>
+        <div class="col-md-2">
+            <?php $this->Form->label($this->_('Porkbun.tab_urlforward.type', true), 'new_type'); ?>
+            <?php $this->Form->fieldSelect('new_type', ['temporary' => 'Temporary (302)', 'permanent' => 'Permanent (301)'], null, ['class' => 'form-control']); ?>
+        </div>
+        <div class="col-md-1">
+            <?php $this->Form->label($this->_('Porkbun.tab_urlforward.include_path', true), 'new_include_path'); ?>
+            <?php $this->Form->fieldSelect('new_include_path', ['no' => 'No', 'yes' => 'Yes'], null, ['class' => 'form-control']); ?>
+        </div>
+        <div class="col-md-1">
+            <?php $this->Form->label($this->_('Porkbun.tab_urlforward.wildcard', true), 'new_wildcard'); ?>
+            <?php $this->Form->fieldSelect('new_wildcard', ['no' => 'No', 'yes' => 'Yes'], null, ['class' => 'form-control']); ?>
+        </div>
+        <div class="col-md-2" style="padding-top:25px;">
+            <?php $this->Form->fieldSubmit('save', $this->_('Porkbun.tab_urlforward.add_record', true), ['class' => 'btn btn-primary']); ?>
+        </div>
+    </div>
+    <?php $this->Form->end(); ?>
+</div>

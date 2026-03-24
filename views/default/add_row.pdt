@@ -1,0 +1,37 @@
+<?php
+$this->Widget->clear();
+$this->Widget->create($this->_('Porkbun.add_row.box_title', true));
+?>
+<div class="inner">
+    <?php $this->Form->create(); ?>
+    <div class="title_row first">
+        <h3><?php $this->_('Porkbun.add_row.basic_title'); ?></h3>
+    </div>
+    <div class="pad">
+        <ul>
+            <li>
+                <?php
+                $this->Form->label($this->_('Porkbun.add_row.field_user', true), 'user');
+                $this->Form->fieldText('user', (isset($vars->user) ? $vars->user : null), ['id' => 'user', 'class' => 'block']);
+                ?>
+            </li>
+            <li>
+                <?php
+                $this->Form->label($this->_('Porkbun.add_row.field_apikey', true), 'apikey');
+                $this->Form->fieldText('apikey', (isset($vars->apikey) ? $vars->apikey : null), ['id' => 'apikey', 'class' => 'block']);
+                ?>
+            </li>
+            <li>
+                <?php
+                $this->Form->label($this->_('Porkbun.add_row.field_secretapikey', true), 'secretapikey');
+                $this->Form->fieldText('secretapikey', (isset($vars->secretapikey) ? $vars->secretapikey : null), ['id' => 'secretapikey', 'class' => 'block']);
+                ?>
+            </li>
+        </ul>
+    </div>
+    <div class="button_row">
+        <?php $this->Form->fieldSubmit('save', $this->_('Porkbun.add_row.add_btn', true), ['class' => 'btn btn-primary pull-right']); ?>
+    </div>
+    <?php $this->Form->end(); ?>
+</div>
+<?php $this->Widget->end(); ?>

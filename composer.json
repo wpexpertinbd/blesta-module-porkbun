@@ -1,0 +1,15 @@
+{
+    "name": "biswashost/blesta-porkbun",
+    "description": "Porkbun domain registrar module for Blesta",
+    "type": "blesta-module",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "BiswasHost",
+            "homepage": "https://www.biswashost.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.0"
+    }
+}

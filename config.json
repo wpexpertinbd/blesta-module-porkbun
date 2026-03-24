@@ -1,0 +1,34 @@
+{
+    "version": "1.0.0",
+    "type": "registrar",
+    "name": "Porkbun.name",
+    "description": "Porkbun.description",
+    "authors": [
+        {
+            "name": "BiswasHost",
+            "url": "https://www.biswashost.com"
+        }
+    ],
+    "package": {
+        "name_key": "domain"
+    },
+    "service": {
+        "name_key": "domain"
+    },
+    "module": {
+        "row": "Porkbun.module_row",
+        "rows": "Porkbun.module_row_plural",
+        "row_key": "user"
+    },
+    "email_tags": {
+        "module": [],
+        "package": [],
+        "service": ["domain", "transfer", "ns1", "ns2", "ns3", "ns4", "ns5"]
+    },
+    "features": {
+        "dns_management": 1,
+        "email_forwarding": 0,
+        "id_protection": 0,
+        "epp_code": 1
+    }
+}

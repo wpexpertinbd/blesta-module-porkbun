@@ -1,0 +1,120 @@
+<div class="pad">
+    <div class="title_row first">
+        <h3><?php $this->_('Porkbun.tab_dnsrecords.title_list'); ?></h3>
+    </div>
+    <p class="text-muted"><small><?php $this->_('Porkbun.tab_dnsrecords.info'); ?></small></p>
+
+    <!-- Existing Records -->
+    <table class="table table-curved table-striped">
+        <thead>
+            <tr class="heading_row">
+                <th><?php $this->_('Porkbun.tab_dnsrecords.record_type'); ?></th>
+                <th><?php $this->_('Porkbun.tab_dnsrecords.host'); ?></th>
+                <th><?php $this->_('Porkbun.tab_dnsrecords.value'); ?></th>
+                <th><?php $this->_('Porkbun.tab_dnsrecords.ttl'); ?></th>
+                <th><?php $this->_('Porkbun.tab_dnsrecords.priority'); ?></th>
+                <th><?php $this->_('Porkbun.tab_dnsrecords.options'); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($vars->records)) { ?>
+                <?php foreach ($vars->records as $i => $record) { ?>
+                <tr>
+                    <td><?php echo $this->Html->safe($record['type']); ?></td>
+                    <td><?php echo $this->Html->safe($record['name']); ?></td>
+                    <td style="max-width:300px;word-break:break-all;"><?php echo $this->Html->safe($record['content']); ?></td>
+                    <td><?php echo $this->Html->safe($record['ttl']); ?></td>
+                    <td><?php echo $this->Html->safe($record['prio']); ?></td>
+                    <td style="white-space:nowrap;">
+                        <!-- Edit button -->
+                        <a href="#" class="btn btn-info btn-sm" data-toggle="collapse" data-target="#edit_row_<?php echo $i; ?>">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <!-- Delete -->
+                        <?php $this->Form->create(); ?>
+                        <?php $this->Form->fieldHidden('delete_id', $record['id']); ?>
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this record?');">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <?php $this->Form->end(); ?>
+                    </td>
+                </tr>
+                <!-- Inline Edit Row -->
+                <tr id="edit_row_<?php echo $i; ?>" class="collapse">
+                    <td colspan="6" style="background:#f9f9f9;">
+                        <?php $this->Form->create(); ?>
+                        <?php $this->Form->fieldHidden('edit_id', $record['id']); ?>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label>Type</label>
+                                <?php $this->Form->fieldSelect('edit_type', $vars->record_types, $record['type'], ['class' => 'form-control']); ?>
+                            </div>
+                            <div class="col-md-2">
+                                <label>Host</label>
+                                <?php
+                                $editName = $record['name'];
+                                if (!empty($vars->domain) && substr($editName, -(strlen($vars->domain) + 1)) === '.' . $vars->domain) {
+                                    $editName = substr($editName, 0, -(strlen($vars->domain) + 1));
+                                } elseif ($editName === $vars->domain) {
+                                    $editName = '';
+                                }
+                                ?>
+                                <?php $this->Form->fieldText('edit_name', $editName, ['class' => 'form-control']); ?>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Value</label>
+                                <?php $this->Form->fieldText('edit_content', $record['content'], ['class' => 'form-control']); ?>
+                            </div>
+                            <div class="col-md-1">
+                                <label>TTL</label>
+                                <?php $this->Form->fieldText('edit_ttl', $record['ttl'], ['class' => 'form-control']); ?>
+                            </div>
+                            <div class="col-md-1">
+                                <label>Priority</label>
+                                <?php $this->Form->fieldText('edit_prio', $record['prio'], ['class' => 'form-control']); ?>
+                            </div>
+                            <div class="col-md-2" style="padding-top:25px;">
+                                <?php $this->Form->fieldSubmit('save', 'Update', ['class' => 'btn btn-info btn-sm']); ?>
+                                <a href="#" class="btn btn-default btn-sm" data-toggle="collapse" data-target="#edit_row_<?php echo $i; ?>">Cancel</a>
+                            </div>
+                        </div>
+                        <?php $this->Form->end(); ?>
+                    </td>
+                </tr>
+                <?php } ?>
+            <?php } else { ?>
+                <tr><td colspan="6" class="text-center">No DNS records found.</td></tr>
+            <?php } ?>
+        </tbody>
+    </table>
+
+    <!-- Add New Record -->
+    <h4><?php $this->_('Porkbun.tab_dnsrecords.add_record'); ?></h4>
+    <?php $this->Form->create(); ?>
+    <div class="row">
+        <div class="col-md-2">
+            <?php $this->Form->label($this->_('Porkbun.tab_dnsrecords.record_type', true), 'new_type'); ?>
+            <?php $this->Form->fieldSelect('new_type', $vars->record_types, null, ['class' => 'form-control']); ?>
+        </div>
+        <div class="col-md-2">
+            <?php $this->Form->label($this->_('Porkbun.tab_dnsrecords.host', true), 'new_name'); ?>
+            <?php $this->Form->fieldText('new_name', null, ['class' => 'form-control', 'placeholder' => 'subdomain']); ?>
+        </div>
+        <div class="col-md-3">
+            <?php $this->Form->label($this->_('Porkbun.tab_dnsrecords.value', true), 'new_content'); ?>
+            <?php $this->Form->fieldText('new_content', null, ['class' => 'form-control']); ?>
+        </div>
+        <div class="col-md-1">
+            <?php $this->Form->label($this->_('Porkbun.tab_dnsrecords.ttl', true), 'new_ttl'); ?>
+            <?php $this->Form->fieldText('new_ttl', '600', ['class' => 'form-control']); ?>
+        </div>
+        <div class="col-md-1">
+            <?php $this->Form->label($this->_('Porkbun.tab_dnsrecords.priority', true), 'new_prio'); ?>
+            <?php $this->Form->fieldText('new_prio', '', ['class' => 'form-control']); ?>
+        </div>
+        <div class="col-md-2" style="padding-top:25px;">
+            <?php $this->Form->fieldSubmit('save', $this->_('Porkbun.tab_dnsrecords.add_record', true), ['class' => 'btn btn-primary']); ?>
+        </div>
+    </div>
+    <?php $this->Form->end(); ?>
+</div>

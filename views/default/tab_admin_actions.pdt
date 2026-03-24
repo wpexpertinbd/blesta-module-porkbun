@@ -1,0 +1,15 @@
+<div class="row panel-fix">
+    <div class="col-md-12">
+        <h4><?php $this->_('Porkbun.tab_admin_actions.title'); ?></h4>
+
+        <?php $this->Form->create(); ?>
+        <?php $this->Form->fieldHidden('action', 'sync_date'); ?>
+        <div class="form-group">
+            <p><?php $this->_('Porkbun.tab_admin_actions.sync_date_tooltip'); ?></p>
+        </div>
+        <div class="button_row">
+            <?php $this->Form->fieldSubmit('save', $this->_('Porkbun.tab_admin_actions.field_submit', true), ['class' => 'btn btn-primary']); ?>
+        </div>
+        <?php $this->Form->end(); ?>
+    </div>
+</div>

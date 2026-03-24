@@ -1,0 +1,84 @@
+<div class="pad">
+    <div class="title_row first">
+        <h3><?php $this->_('Porkbun.tab_gluerecords.title_list'); ?></h3>
+    </div>
+    <p class="text-muted"><small><?php $this->_('Porkbun.tab_gluerecords.info'); ?></small></p>
+
+    <!-- Existing Glue Records -->
+    <table class="table table-curved table-striped">
+        <thead>
+            <tr class="heading_row">
+                <th><?php $this->_('Porkbun.tab_gluerecords.hostname'); ?></th>
+                <th><?php $this->_('Porkbun.tab_gluerecords.ips'); ?></th>
+                <th><?php $this->_('Porkbun.tab_gluerecords.options'); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($vars->records)) { ?>
+                <?php foreach ($vars->records as $record) { ?>
+                <tr>
+                    <td><strong><?php echo $this->Html->safe($record['hostname']); ?></strong></td>
+                    <td>
+                        <?php foreach ($record['ips'] as $ip) { ?>
+                            <code><?php echo $this->Html->safe($ip); ?></code><br>
+                        <?php } ?>
+                    </td>
+                    <td style="min-width:220px;">
+                        <!-- Edit (Update IPs) -->
+                        <a href="#" class="btn btn-info btn-sm" data-toggle="collapse" data-target="#edit_<?php echo $this->Html->safe($record['subdomain']); ?>">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <!-- Delete -->
+                        <?php $this->Form->create(); ?>
+                        <?php $this->Form->fieldHidden('delete_subdomain', $record['subdomain']); ?>
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete glue record <?php echo $this->Html->safe($record['hostname']); ?>?');">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <?php $this->Form->end(); ?>
+                    </td>
+                </tr>
+                <!-- Inline Edit Row -->
+                <tr id="edit_<?php echo $this->Html->safe($record['subdomain']); ?>" class="collapse">
+                    <td colspan="3">
+                        <?php $this->Form->create(); ?>
+                        <?php $this->Form->fieldHidden('edit_subdomain', $record['subdomain']); ?>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <?php $this->Form->label('Update IPs for ' . $record['hostname'], 'edit_ips'); ?>
+                                <?php $this->Form->fieldTextarea('edit_ips', implode("\n", $record['ips']), ['class' => 'form-control', 'rows' => '3', 'placeholder' => "One IP per line\n192.168.1.1\n2001:db8::1"]); ?>
+                            </div>
+                            <div class="col-md-4" style="padding-top:25px;">
+                                <?php $this->Form->fieldSubmit('save', $this->_('Porkbun.tab_gluerecords.edit_record', true), ['class' => 'btn btn-info']); ?>
+                            </div>
+                        </div>
+                        <?php $this->Form->end(); ?>
+                    </td>
+                </tr>
+                <?php } ?>
+            <?php } else { ?>
+                <tr><td colspan="3" class="text-center"><?php $this->_('Porkbun.tab_gluerecords.no_records'); ?></td></tr>
+            <?php } ?>
+        </tbody>
+    </table>
+
+    <!-- Add New Glue Record -->
+    <h4><?php $this->_('Porkbun.tab_gluerecords.add_record'); ?></h4>
+    <?php $this->Form->create(); ?>
+    <div class="row">
+        <div class="col-md-3">
+            <?php $this->Form->label($this->_('Porkbun.tab_gluerecords.subdomain', true), 'new_subdomain'); ?>
+            <div class="input-group">
+                <?php $this->Form->fieldText('new_subdomain', null, ['class' => 'form-control', 'placeholder' => 'ns1']); ?>
+                <span class="input-group-addon">.<?php echo $this->Html->safe($vars->domain); ?></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <?php $this->Form->label($this->_('Porkbun.tab_gluerecords.ips', true), 'new_ips'); ?>
+            <?php $this->Form->fieldTextarea('new_ips', null, ['class' => 'form-control', 'rows' => '3', 'placeholder' => "One IP per line (IPv4 and/or IPv6)\n192.168.1.1\n2001:db8:3333:4444:5555:6666:7777:8888"]); ?>
+        </div>
+        <div class="col-md-3" style="padding-top:25px;">
+            <?php $this->Form->fieldSubmit('save', $this->_('Porkbun.tab_gluerecords.field_submit', true), ['class' => 'btn btn-primary']); ?>
+        </div>
+    </div>
+    <?php $this->Form->end(); ?>
+</div>
